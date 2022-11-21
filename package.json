@@ -1,14 +1,22 @@
 {
-  "name": "sims-development",
+  "name": "shopify-development",
   "version": "1.0.0",
-  "description": "[![Build status](https://github.com/shopify/dawn/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Shopify/dawn/actions/workflows/ci.yml?query=branch%3Amain) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?color=informational)](/.github/CONTRIBUTING.md)",
+  "description": "[![Generic badge](https://img.shields.io/badge/course%20available%3F-yes-green.svg)](https://shields.io/)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simzeee/shopify-development.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/simzeee/shopify-development/issues"
+  },
+  "homepage": "https://github.com/simzeee/shopify-development#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.19",
