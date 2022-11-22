@@ -10,7 +10,8 @@
     {{ content_for_header }}
     <!-- Header hook for plugins -->
     {{ 'tailwind.css' | asset_url | stylesheet_tag }}
-    {{ 'application.js' | asset_url | script_tag }}
+    <script src="{{ 'application.js' | asset_url }}" defer></script>
+
   </head>
   <body>
 
