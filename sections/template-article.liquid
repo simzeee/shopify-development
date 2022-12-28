@@ -1,4 +1,7 @@
-<article class="py-8">
+<article
+  class="py-8"
+  itemscope
+  itemtype="http://schema.org/BlogPosting">
 
   {%- for block in section.blocks -%}
     {%- case block.type -%}
@@ -6,14 +9,17 @@
       <div class="flex items-center justify-center">
         <div class="max-w-7xl text-center">
           <a href="{{ blog.url }}" class="text-base uppercase text-gray-500 hover:text-gray-900 font-bold">{{ blog.title }}</a>
-          <h1 class="text-4xl md:text-6xl font-medium">{{ article.title }}</h1>
+          <h1 class="text-4xl md:text-6xl font-medium" itemprop="headline">{{ article.title }}</h1>
         </div>
       </div>
       {%- when 'article_author' -%}
       <div class="flex items-center justify-center">
-        <div class="max-w-7xl text-center">
+        <div
+          class="max-w-7xl text-center"
+          itemscope
+          itemtype="http://schema.org/Person">
           {%- if section.settings.enable_author -%}
-            <small>{{ article.author }}</small>
+            <small itemprop="author">{{ article.author }}</small>
           {%- endif -%}
         </div>
       </div>
@@ -21,12 +27,12 @@
       <div class="flext items-center justify-center">
         <div class="max-w-7xl text-center">
           {% if section.settings.enable_published_date %}
-            <time datetime="{{ article.published_at | date: "%Y-%m-%d" }}">{{ article.published_at | date: format: 'on_date' }}</time>
+            <time itemprop="datePublished dateCreated" datetime="{{ article.published_at | date: "%Y-%m-%d" }}">{{ article.published_at | date: format: 'on_date' }}</time>
           {% endif %}
         </div>
       </div>
       {%- when 'featured_image' -%}
-      <div class="max-w-7xl bg-blue-100 rounded-lg mx-2 md:mx-auto overflow-hidden my-4">
+      <div itemprop="image" class="max-w-7xl bg-blue-100 rounded-lg mx-2 md:mx-auto overflow-hidden my-4">
         {% if article.image != blank %}
           <img
             class="w-full h-80 md:h-96 object-cover object-center p-5"
@@ -39,7 +45,7 @@
       </div>
       {%- when 'article_content' -%}
       <div class="flex items-center justify-center">
-        <div class="max-w-4xl">
+        <div itemprop="articleBody" class="max-w-4xl">
           {{ article.content }}
         </div>
       </div>
@@ -56,7 +62,7 @@
           See what people are saying
         </h1>
         {% paginate article.comments by 5 %}
-          {% for comment in article.comments %}
+          {% for commen in article.comments %}
             <div class="flex-1 border my-4 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
               <span class="comment-author">{{ comment.author }}</span>
               <span class="text-xs text-gray-400">{{ comment.created_at | date: format: 'default' }}</span>
@@ -77,6 +83,38 @@
   <div id="comment_form" class="mb-8">
     {% form 'new_comment', article %}
       <div class="flex-1 mx-auto items-center justify-center max-w-4xl px-4">
+
+        {% if form.errors %}
+          <div class="border p-5">
+            <div class="flex flex-row items-center w-full my-3">
+              <div class="text-red-500">
+                {% render 'icon-failed' %}
+              </div>
+              <div class="text-sm font-medium ml-3">
+                Oh no! Your comment was not posted!
+              </div>
+            </div>
+
+            <ul class="px-4 mb-3 ml-7 list-decimal">
+              {% for error in form.errors %}
+                <li>
+                  <span>{{ form.errors.messages[error] }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+
+          </div>
+        {% elsif form.posted_successfully? %}
+          <div class="flex flex-row items-center w-full my-3 p-5">
+            <div class="text-green-500">
+              {% render 'icon-success' %}
+            </div>
+            <div class="text-sm font-medium ml-3">
+              Comment is posted successfully!
+            </div>
+          </div>
+        {% endif %}
+
         <div class="px-1 md:flex mb-3">
           <div class="px-3 md:w-1/2">
             <label for="comment_author" class="text-gray-700 font-medium uppercase text-xs mb-2">Name</label>
@@ -122,6 +160,32 @@
   </div>
 {% endif %}
 
+<script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+            "@type": "BlogPosting",
+            "headline": {{ article.title | json }},
+  "articleBody": {{ article.content | strip_html | json }},
+  {% if article.excerpt != blank %}
+    "description": {{ article.excerpt | strip_html | json }},
+  {% endif %}
+  {% if article.image %}
+    "image": [
+    {{ article.image | img_url: 'medium' | prepend: 'https:' | json }}
+    ],
+  {% endif %}
+  "datePublished": {{ article.published_at | date: format: "default" | json }},
+  "dateCreated": {{ article.created_at | date: format: "default" | json }},
+  "author": {
+              "@type": "Person",
+              "name": {{ article.author | json }}
+  },
+  "publisher": {
+              "@type": "Organization",
+              "name": {{ shop.name | json }}
+  }
+  }
+</script>
 
 {% schema %}
   {
