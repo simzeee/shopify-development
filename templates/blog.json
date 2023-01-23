@@ -1,8 +1,12 @@
 {
   "sections": {
     "template": {
-      "type": "template-blog.liquid"
+      "type": "template-blog",
+      "settings": {
+      }
     }
   },
-  "order": ["template"]
+  "order": [
+    "template"
+  ]
 }
